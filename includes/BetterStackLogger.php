@@ -204,33 +204,37 @@ class BetterStackLogger {
     $url = "https://in.logs.betterstack.com";
     $date = gmdate('Y-m-d H:i:s') . " UTC";
 
-    $data = json_encode([
+    $data = [
       "dt" => $date,
       "message" => $message
-    ]);
+    ];
 
-    $ch = curl_init($url);
+    $args = [
+      'body'        => wp_json_encode($data),
+      'headers'     => [
+        'Content-Type'  => 'application/json',
+        'Authorization' => 'Bearer ' . $this->api_key,
+      ],
+      'timeout'     => 15,
+      'sslverify'   => false,
+    ];
 
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-      'Content-Type: application/json',
-      'Authorization: Bearer ' . $this->api_key
-    ]);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = wp_remote_post($url, $args);
 
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if (is_wp_error($response)) {
+      return "Failed to send log message. Error: " . $response->get_error_message();
+    }
 
-    curl_close($ch);
+    $http_code = wp_remote_retrieve_response_code($response);
 
     if ($http_code == 202) {
       return "Log message sent successfully!";
     } else {
-      return "Failed to send log message. Status code: $http_code, Response: $response";
+      $response_body = wp_remote_retrieve_body($response);
+      return "Failed to send log message. Status code: $http_code, Response: $response_body";
     }
   }
+
 
   /**
    * Custom handler for wp_die, logs errors via BetterStack.
@@ -258,10 +262,19 @@ class BetterStackLogger {
    * Displays the BetterStack Logger settings page.
    */
   public function settings_page() {
-    if (isset($_POST['betterstack_test_message']) && !empty($_POST['betterstack_test_message'])) {
-      $test_message = sanitize_text_field($_POST['betterstack_test_message']);
-      $result = $this->log_error($test_message);
-      echo '<div class="notice notice-success is-dismissible"><p>' . esc_html($result) . '</p></div>';
+    if (isset($_POST['betterstack_test_message'])) {
+      // Verify the nonce before processing the form data
+      if (!isset($_POST['betterstack_nonce']) || !wp_verify_nonce($_POST['betterstack_nonce'], 'betterstack_test_message_action')) {
+        echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__('Security check failed. Please try again.', 'betterstack-logger') . '</p></div>';
+        return;
+      }
+
+      // Sanitize and process the form data
+      if (!empty($_POST['betterstack_test_message'])) {
+        $test_message = sanitize_text_field($_POST['betterstack_test_message']);
+        $result = $this->log_error($test_message);
+        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html($result) . '</p></div>';
+      }
     }
 ?>
     <div class="wrap">
@@ -275,12 +288,14 @@ class BetterStackLogger {
       </form>
       <h2>Send Test Message</h2>
       <form method="post" action="">
+        <?php wp_nonce_field('betterstack_test_message_action', 'betterstack_nonce'); ?>
         <input type="text" name="betterstack_test_message" value="" placeholder="Enter test message" size="50">
         <?php submit_button('Send Test Message'); ?>
       </form>
     </div>
 <?php
   }
+
 
   /**
    * Initializes the BetterStack Logger settings.

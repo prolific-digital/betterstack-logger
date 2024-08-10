@@ -3,10 +3,18 @@
 Plugin Name: BetterStack Logger
 Plugin URI:  https://prolificdigital.com
 Description: Seamlessly integrate with BetterStack to log messages directly from your WordPress site. Enhance your logging capabilities with ease and precision.
-Version:     1.0.0
-Author:      Prolific Digital
-Author URI:  https://prolificdigital.com
-License:     GPL2
+Short Description: Seamlessly integrate with BetterStack to log messages directly from your WordPress site.
+Tags: betterstack, logger, logging, error, errors, debug, debugging, log, logs, monitoring, monitoring, betterstack logger, betterstack logging, betterstack error logging, betterstack error logger, betterstack debug logging, betterstack debug logger
+Version: 1.0.0
+Requires at least: 6.0
+Requires PHP: 8.0
+Tested up to: 6.6
+Author: Prolific Digital
+Author URI: https://prolificdigital.com
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: betterstack-logger
+
 */
 
 if (!defined('WPINC')) {
