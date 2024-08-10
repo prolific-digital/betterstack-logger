@@ -24,7 +24,7 @@ BetterStack Logger is a powerful WordPress plugin that allows you to seamlessly 
 
 ### Manual Installation
 
-1. Download the plugin from the [WordPress Plugin Repository](https://wordpress.org/plugins/).
+1. Download the plugin from the [Plugin Releases](https://github.com/prolific-digital/betterstack-logger/releases).
 2. Upload the `betterstack-logger` directory to the `/wp-content/plugins/` directory.
 3. Activate the plugin through the `Plugins` menu in WordPress.
 4. Go to `Tools` -> `BetterStack Logger Settings` to configure the plugin.
