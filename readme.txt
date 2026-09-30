@@ -36,6 +36,8 @@ The API key can also be defined in `wp-config.php`:
 * License is GPL-2.0-or-later.
 * Requires WordPress 6.5+ and PHP 8.4+.
 * Uninstalling removes the plugin's settings.
+* Security: requests to BetterStack now verify the TLS certificate (`sslverify` was disabled).
+* Security: the source token and logging checkboxes are sanitized when saved.
 
 = 1.0.0 =
 * Initial release.

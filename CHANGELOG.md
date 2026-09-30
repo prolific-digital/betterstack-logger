@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `uninstall.php` removes the plugin's three options.
 - `CHANGELOG.md`, coding-standards config and CI/release workflows.
 
+### Security
+- Requests to BetterStack now verify the TLS certificate. `wp_remote_post()` was called with `sslverify => false`, which let anyone on the network path intercept log messages and the source token. It now uses the WordPress default (verify).
+- The source token is sanitized on save (only Bearer-token characters are kept) and the two logging checkboxes are stored only as `yes` or empty. The token was already escaped on the settings screen.
+
 ## [1.0.0] - 2024-08-10
 
 ### Added
