@@ -21,6 +21,17 @@ if (!defined('WPINC')) {
   die;
 }
 
+define( 'BETTERSTACK_LOGGER_PLUGIN_FILE', __FILE__ );
+define( 'BETTERSTACK_LOGGER_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+
+// Composer dependencies (plugin-update-checker). Present in release zips;
+// in a git checkout run `composer install` first.
+if ( is_readable( BETTERSTACK_LOGGER_PLUGIN_DIR . 'vendor/autoload.php' ) ) {
+	require_once BETTERSTACK_LOGGER_PLUGIN_DIR . 'vendor/autoload.php';
+}
+
+require_once BETTERSTACK_LOGGER_PLUGIN_DIR . 'includes/update-checker.php';
+
 require_once plugin_dir_path(__FILE__) . 'includes/BetterStackLogger.php';
 
 // Create a global instance of the BetterStackLogger class
