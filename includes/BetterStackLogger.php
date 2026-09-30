@@ -1,8 +1,6 @@
 <?php
 
-if (!defined('WPINC')) {
-  die;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * BetterStackLogger Class
@@ -216,7 +214,6 @@ class BetterStackLogger {
         'Authorization' => 'Bearer ' . $this->api_key,
       ],
       'timeout'     => 15,
-      'sslverify'   => false,
     ];
 
     $response = wp_remote_post($url, $args);
@@ -298,16 +295,62 @@ class BetterStackLogger {
 
 
   /**
+   * Sanitizes the BetterStack source token before it is saved.
+   *
+   * Keeps only the characters allowed in an RFC 6750 Bearer token
+   * (letters, digits and - . _ ~ + / =), which also drops tags, quotes and whitespace.
+   *
+   * @param mixed $value Submitted value.
+   * @return string
+   */
+  public function sanitize_api_key($value) {
+    if (!is_string($value)) {
+      return '';
+    }
+    return preg_replace('/[^A-Za-z0-9\-._~+\/=]/', '', sanitize_text_field($value));
+  }
+
+  /**
+   * Sanitizes a "yes" checkbox. Unchecked boxes are stored as an empty string, as before.
+   *
+   * @param mixed $value Submitted value.
+   * @return string
+   */
+  public function sanitize_checkbox($value) {
+    return 'yes' === $value ? 'yes' : '';
+  }
+
+  /**
    * Initializes the BetterStack Logger settings.
    *
    * Registers settings and adds settings sections and fields for the API key,
    * error logging, and event logging options.
    */
   public function settings_init() {
-    register_setting('betterstack_logger_options_group', 'betterstack_api_key');
-    register_setting('betterstack_logger_options_group', 'betterstack_error_logging_enabled');
-
-    register_setting('betterstack_logger_options_group', 'betterstack_event_logging_enabled');
+    register_setting(
+      'betterstack_logger_options_group',
+      'betterstack_api_key',
+      [
+        'type'              => 'string',
+        'sanitize_callback' => [$this, 'sanitize_api_key'],
+      ]
+    );
+    register_setting(
+      'betterstack_logger_options_group',
+      'betterstack_error_logging_enabled',
+      [
+        'type'              => 'string',
+        'sanitize_callback' => [$this, 'sanitize_checkbox'],
+      ]
+    );
+    register_setting(
+      'betterstack_logger_options_group',
+      'betterstack_event_logging_enabled',
+      [
+        'type'              => 'string',
+        'sanitize_callback' => [$this, 'sanitize_checkbox'],
+      ]
+    );
 
     add_settings_section(
       'betterstack_logger_settings_section',
