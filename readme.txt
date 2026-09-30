@@ -1,116 +1,41 @@
 === BetterStack Logger ===
-Contributors: millertchris
-Donate link: https://github.com/sponsors/millertchris
-Plugin Name: BetterStack Logger
-Plugin URI:  https://prolificdigital.com
-Tags: betterstack, logger, logging, debug, monitor
-Stable tag: 1.0.0
-Requires at least: 6.0
-Requires PHP: 8.0
-Tested up to: 6.6
-Author: Prolific Digital
-Author URI: https://prolificdigital.com
-License: GPLv2 or later
+Contributors: prolificdigital
+Tags: betterstack, logger, logging, debug, monitoring
+Requires at least: 6.5
+Tested up to: 7.1
+Requires PHP: 8.4
+Stable tag: 1.1.0
+License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: betterstack-logger
-Seamlessly integrate with BetterStack to log messages directly from your WordPress site.
+
+Sends error messages, user actions, post changes and custom log messages from WordPress to BetterStack.
 
 == Description ==
 
-BetterStack Logger is a powerful WordPress plugin that allows you to seamlessly integrate BetterStack with your WordPress site. Enhance your logging capabilities by sending error messages, post changes, user actions, and more directly to BetterStack. With easy configuration and flexible logging functions, this plugin is an essential tool for developers and site administrators looking to keep track of their site's activities.
+BetterStack Logger sends log entries from your WordPress site to BetterStack.
 
-## Features
+* **Error logging:** messages passed to `wp_die()`.
+* **Event logging:** logins, registrations, profile updates, password resets and user deletions; post saves and deletions; plugin activations and deactivations; theme switches.
+* **Custom messages:** call `better_error_log( $message )` or `b_log( $message )` from any code.
+* **Settings page:** **Tools > BetterStack Logger** sets the API key, toggles error and event logging, and sends a test message.
 
-- **Error Logging:** Capture and log WordPress errors directly to BetterStack.
-- **User Action Logging:** Log important user actions such as logins, registrations, and profile updates.
-- **Post Changes:** Monitor post creation, updates, and deletions.
-- **Plugin and Theme Activity:** Log plugin activations/deactivations and theme switches.
-- **Customizable Logging:** Use helper functions to log custom messages from anywhere in your codebase.
-- **Settings Page:** Easily configure the API key, enable or disable specific logging features via the WordPress admin panel.
-- **Support for `wp-config.php`:** Define your BetterStack API key in `wp-config.php` for additional security.
+The API key can also be defined in `wp-config.php`:
+`define( 'BETTERSTACK_API_KEY', 'your-api-key-here' );`
 
-## Installation
+== Installation ==
 
-### From Your WordPress Dashboard
+1. Upload the `betterstack-logger` folder to `/wp-content/plugins/`, or install the release zip from **Plugins > Add New > Upload Plugin**.
+2. Activate the plugin and go to **Tools > BetterStack Logger** to enter your API key.
+3. To receive automatic updates, add your license key to `wp-config.php`:
+   `define( 'PROLIFIC_LICENSE_KEY_BETTERSTACK_LOGGER', 'your-key' );`
 
-1. Navigate to `Plugins` -> `Add New`.
-2. Search for `BetterStack Logger`.
-3. Click `Install Now`.
-4. Activate the plugin.
-5. Go to `Tools` -> `BetterStack Logger Settings` to configure the plugin.
+== Changelog ==
 
-### Manual Installation
+= 1.1.0 =
+* Updates now come from the Prolific Digital license server. Define `PROLIFIC_LICENSE_KEY_BETTERSTACK_LOGGER` to receive them.
+* License is GPL-2.0-or-later.
+* Requires WordPress 6.5+ and PHP 8.4+.
+* Uninstalling removes the plugin's settings.
 
-1. Download the plugin from the [Plugin Releases](https://github.com/prolific-digital/betterstack-logger/releases).
-2. Upload the `betterstack-logger` directory to the `/wp-content/plugins/` directory.
-3. Activate the plugin through the `Plugins` menu in WordPress.
-4. Go to `Tools` -> `BetterStack Logger Settings` to configure the plugin.
-
-## Configuration
-
-### API Key
-
-To log messages to BetterStack, you need to set up your API key:
-
-1. Go to `Tools` -> `BetterStack Logger Settings`.
-2. Enter your BetterStack API key in the `API Key` field.
-3. Optionally, define the API key in your `wp-config.php` file using `BETTERSTACK_API_KEY`.
-
-### Logging Options
-
-- **Enable Error Logging:** Toggle to capture WordPress errors.
-- **Enable Event Logging:** Toggle to log user actions, post changes, and more.
-
-## Usage
-
-### Logging Custom Messages
-
-Use the following functions to log messages from anywhere in your code:
-
-```php
-// Log a custom message
-better_error_log('This is a custom error message.');
-
-// Shorter version
-b_log('This is a quick log message.');
-```
-
-### Example:
-
-```php
-function my_custom_function() {
-    // Perform some task
-    // ...
-
-    // Log a message
-    better_error_log('Task completed successfully.');
-}
-
-add_action('init', 'my_custom_function');
-```
-
-### Available Functions
-
-- `better_error_log($message)`: Logs a custom message to BetterStack.
-- `b_log($message)`: Shorthand function to log a custom message to BetterStack.
-
-## Frequently Asked Questions
-
-Can I define the API key in `wp-config.php`?
-
-Yes! For added security, you can define your API key in `wp-config.php` using:
-
-```php
-define('BETTERSTACK_API_KEY', 'your-api-key-here');
-```
-
-What types of events can I log with BetterStack Logger?
-
-You can log errors, user actions (e.g., logins, registrations), post changes (e.g., creation, updates, deletions), plugin activations/deactivations, theme switches, and custom messages.
-
-## Support
-
-If you need help or have any questions, feel free to reach out to us:
-
-- Visit our [Support Page](https://prolificdigital.notion.site/BetterStack-Logger-c0cc4526efd049c09b77965bf3ecc28e)
-- Email us at support@prolificdigital.com
+= 1.0.0 =
+* Initial release.
