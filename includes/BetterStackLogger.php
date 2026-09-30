@@ -1,8 +1,6 @@
 <?php
 
-if (!defined('WPINC')) {
-  die;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * BetterStackLogger Class
